@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { Stop } from "../app/page";
-import { format } from 'date-fns';
 import { calculateDistance, formatDuration } from "@/lib/utils";
 import { Location } from "@/types";
+import { format } from 'date-fns';
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect } from "react";
+import { Stop } from "../app/page";
 
 interface MapProps {
   currentLocation: Location | null;
@@ -206,5 +206,5 @@ export default function Map({ currentLocation, pickupLocation, dropoffLocation, 
     };
   }, [currentLocation, pickupLocation, dropoffLocation, stops]);
 
-  return <div id="map" className="w-full h-full rounded" />;
+  return <div id="map" className="w-full h-full rounded-lg shadow-md" style={{ minHeight: "650px" }} />;
 }

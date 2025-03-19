@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import dynamic from "next/dynamic";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ELDLog, Location } from "@/types";
 import axios from "axios";
 import debounce from "lodash/debounce";
-import { Button } from "@/components/ui/button";
-import { ELDLog, Location } from "@/types";
+import dynamic from "next/dynamic";
+import { useCallback, useState } from "react";
 
 const Map = dynamic(() => import("@/components/Map"), { ssr: false });
 const DailyLogSheet = dynamic(() => import("@/components/DailyLogSheet"), { ssr: false });
@@ -35,13 +38,14 @@ export default function Home() {
   const [tripStops, setTripStops] = useState<Stop[]>([]);
   const [eldLogs, setEldLogs] = useState<ELDLog[]>([]);
   const [tripId, setTripId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<'map' | 'logs'>('map');
+  const [activeTab, setActiveTab] = useState<string>('map');
   const [searchText, setSearchText] = useState({
     current: "",
     pickup: "",
     dropoff: "",
   });
   const [activeInput, setActiveInput] = useState<"current" | "pickup" | "dropoff" | null>(null);
+  const [driverName, setDriverName] = useState<string | null>(null);
 
   const debouncedSearch = useCallback(
     debounce(async (query: string) => {
@@ -176,21 +180,22 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1 space-y-4">
           <h1 className="text-2xl font-bold mb-6">Trip Planner</h1>
           
           <div className="space-y-2 relative">
-            <label className="block">Current Location</label>
+            <Label htmlFor="current-location">Current Location</Label>
             <div className="flex gap-2">
               <div className="flex-1 relative">
-                <input
+                <Input
+                  id="current-location"
                   type="text"
-                  className="w-full p-2 border rounded"
-                  placeholder="Enter current location"
                   value={searchText.current}
                   onChange={(e) => handleInputChange(e.target.value, "current")}
                   onFocus={() => setActiveInput("current")}
+                  placeholder="Enter current location"
+                  className="w-full"
                 />
                 {activeInput === "current" && suggestions.length > 0 && (
                   <div className="absolute z-10 w-full bg-white mt-1 border rounded-md shadow-lg max-h-60 overflow-auto">
@@ -218,15 +223,16 @@ export default function Home() {
           </div>
 
           <div className="space-y-2 relative">
-            <label className="block">Pickup Location</label>
+            <Label htmlFor="pickup-location">Pickup Location</Label>
             <div className="relative">
-              <input
+              <Input
+                id="pickup-location"
                 type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Enter pickup location"
                 value={searchText.pickup}
                 onChange={(e) => handleInputChange(e.target.value, "pickup")}
                 onFocus={() => setActiveInput("pickup")}
+                placeholder="Enter pickup location"
+                className="w-full"
               />
               {activeInput === "pickup" && suggestions.length > 0 && (
                 <div className="absolute z-10 w-full bg-white mt-1 border rounded-md shadow-lg max-h-60 overflow-auto">
@@ -245,15 +251,16 @@ export default function Home() {
           </div>
 
           <div className="space-y-2 relative">
-            <label className="block">Dropoff Location</label>
+            <Label htmlFor="dropoff-location">Dropoff Location</Label>
             <div className="relative">
-              <input
+              <Input
+                id="dropoff-location"
                 type="text"
-                className="w-full p-2 border rounded"
-                placeholder="Enter dropoff location"
                 value={searchText.dropoff}
                 onChange={(e) => handleInputChange(e.target.value, "dropoff")}
                 onFocus={() => setActiveInput("dropoff")}
+                placeholder="Enter dropoff location"
+                className="w-full"
               />
               {activeInput === "dropoff" && suggestions.length > 0 && (
                 <div className="absolute z-10 w-full bg-white mt-1 border rounded-md shadow-lg max-h-60 overflow-auto">
@@ -272,12 +279,13 @@ export default function Home() {
           </div>
 
           <div className="space-y-2">
-            <label className="block">Current Cycle Hours</label>
-            <input
+            <Label htmlFor="cycle-hours">Current Cycle Hours</Label>
+            <Input
+              id="cycle-hours"
               type="number"
-              className="w-full p-2 border rounded"
               value={cycleHours}
               onChange={(e) => setCycleHours(Number(e.target.value))}
+              className="w-full"
             />
           </div>
 
@@ -291,36 +299,43 @@ export default function Home() {
           </Button>
         </div>
 
-        <div className="h-[600px] bg-gray-100 rounded">
-          {tripId && eldLogs.length > 0 && (
-            <div className="mb-4 flex border-b">
-              <button 
-                className={`px-4 py-2 ${activeTab === 'map' ? 'border-b-2 border-blue-500 font-medium' : ''}`}
-                onClick={() => setActiveTab('map')}
-              >
-                Map View
-              </button>
-              <button 
-                className={`px-4 py-2 ${activeTab === 'logs' ? 'border-b-2 border-blue-500 font-medium' : ''}`}
-                onClick={() => setActiveTab('logs')}
-              >
-                Daily Logs
-              </button>
+        <div className="lg:col-span-2 h-[700px] bg-gray-100 rounded">
+          {tripId && eldLogs.length > 0 ? (
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="map">Map View</TabsTrigger>
+                <TabsTrigger value="logs">Daily Logs</TabsTrigger>
+              </TabsList>
+              <TabsContent value="map" className="h-[650px]">
+                <div className="h-full">
+                  <Map
+                    currentLocation={currentLocation}
+                    pickupLocation={pickupLocation}
+                    dropoffLocation={dropoffLocation}
+                    stops={tripStops}
+                  />
+                </div>
+              </TabsContent>
+              <TabsContent value="logs" className="h-[650px]">
+                <div className="h-full overflow-auto">
+                  <DailyLogSheet 
+                    logs={eldLogs} 
+                    tripId={tripId} 
+                    driverName={driverName || "Driver"} 
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <div className="h-full">
+              <Map
+                currentLocation={currentLocation}
+                pickupLocation={pickupLocation}
+                dropoffLocation={dropoffLocation}
+                stops={tripStops}
+              />
             </div>
           )}
-          
-          {activeTab === 'map' ? (
-            <Map
-              currentLocation={currentLocation}
-              pickupLocation={pickupLocation}
-              dropoffLocation={dropoffLocation}
-              stops={tripStops}
-            />
-          ) : tripId && eldLogs.length > 0 ? (
-            <div className="h-full overflow-auto">
-              <DailyLogSheet logs={eldLogs} tripId={tripId} />
-            </div>
-          ) : null}
         </div>
       </div>
     </div>
