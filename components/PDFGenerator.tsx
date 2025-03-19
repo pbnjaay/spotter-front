@@ -1,6 +1,13 @@
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 
+interface ELDLog {
+  start_time: string;
+  end_time: string;
+  duty_status: string;
+  remarks?: string;
+}
+
 interface PDFGeneratorProps {
   content: {
     title: string;
@@ -20,13 +27,13 @@ interface PDFGeneratorProps {
     fromLocation?: string;
     toLocation?: string;
     totalMiles?: string;
-    logs?: any[];
+    logs?: ELDLog[];
   };
   graphImage?: string | null;
   filename?: string;
 }
 
-const drawGraphFromData = (pdf: jsPDF, x: number, y: number, width: number, logs: any[]) => {
+const drawGraphFromData = (pdf: jsPDF, x: number, y: number, width: number, logs: ELDLog[]) => {
   const height = 50;
   const hourWidth = width / 24;
   

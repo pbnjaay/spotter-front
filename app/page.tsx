@@ -45,15 +45,17 @@ export default function Home() {
     dropoff: "",
   });
   const [activeInput, setActiveInput] = useState<"current" | "pickup" | "dropoff" | null>(null);
-  const [driverName, setDriverName] = useState<string | null>(null);
+  const [driverName, setDriverName] = useState<string>("");
 
-  const debouncedSearch = useCallback(
-    debounce(async (query: string) => {
-      if (query.length < 3) {
+  const debouncedSearch = useCallback((query: string) => {
+    const searchFn = async (query: string) => {
+      if (!query.trim()) {
         setSuggestions([]);
         return;
       }
-
+      
+      setLoading(true);
+      
       try {
         const response = await axios.get(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`
@@ -62,10 +64,18 @@ export default function Home() {
       } catch (error) {
         console.error("Error fetching suggestions:", error);
         setSuggestions([]);
+      } finally {
+        setLoading(false);
       }
-    }, 300),
-    []
-  );
+    };
+    
+    const debouncedFn = debounce(searchFn, 300);
+    debouncedFn(query);
+    
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handleInputChange = (value: string, type: "current" | "pickup" | "dropoff") => {
     setSearchText(prev => ({ ...prev, [type]: value }));
@@ -321,7 +331,7 @@ export default function Home() {
                   <DailyLogSheet 
                     logs={eldLogs} 
                     tripId={tripId} 
-                    driverName={driverName || "Driver"} 
+                    driverName={driverName} 
                   />
                 </div>
               </TabsContent>
