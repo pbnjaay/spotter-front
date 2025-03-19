@@ -25,7 +25,6 @@ export default function DailyLogSheet({ logs, tripId }: DailyLogSheetProps) {
   });
   
   const [dailyLogs, setDailyLogs] = useState<ELDLog[]>([]);
-  const [driverSignature, setDriverSignature] = useState<string | null>(null);
   const [driverName, setDriverName] = useState<string>("");
   const [driverNotes, setDriverNotes] = useState<string>("");
   const [totalHours, setTotalHours] = useState<Record<string, number>>({
@@ -218,7 +217,7 @@ export default function DailyLogSheet({ logs, tripId }: DailyLogSheetProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Driver's Daily Log</h2>
+        <h2 className="text-xl font-bold">Driver&apos;s Daily Log</h2>
         <div className="flex space-x-2">
           <Button onClick={handlePreviousDay} variant="outline" size="sm">Previous Day</Button>
           <span className="px-4 py-2 bg-gray-100 rounded font-medium">
