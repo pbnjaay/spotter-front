@@ -188,10 +188,14 @@ export default function Map({ currentLocation, pickupLocation, dropoffLocation, 
     }
 
     if (currentLocation && sortedStops.length > 0) {
-      const stopPoints = sortedStops.map(stop => [stop.location.lat, stop.location.lng]);
+      // Create an array of LatLngExpression objects
+      const stopPoints = sortedStops.map(stop => 
+        [stop.location.lat, stop.location.lng] as L.LatLngTuple
+      );
+      
       polylines.push(
         L.polyline(
-          [[currentLocation.lat, currentLocation.lng], ...stopPoints ],
+          [[currentLocation.lat, currentLocation.lng] as L.LatLngTuple, ...stopPoints],
           { color: 'blue', weight: 3 }
         ).addTo(map)
       );

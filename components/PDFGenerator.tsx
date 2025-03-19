@@ -47,13 +47,13 @@ export const generatePDF = async ({
     const colWidth = contentWidth / 4;
     
     pdf.setFontSize(10);
-    pdf.setFont(undefined, 'bold');
+    pdf.setFont("helvetica", 'bold');
     pdf.text('Off Duty', margin, tableTop);
     pdf.text('Sleeper Berth', margin + colWidth, tableTop);
     pdf.text('Driving', margin + colWidth * 2, tableTop);
     pdf.text('On Duty (Not Driving)', margin + colWidth * 3, tableTop);
     
-    pdf.setFont(undefined, 'normal');
+    pdf.setFont("helvetica", 'normal');
     pdf.text(`${content.hoursData.offDuty} hrs`, margin, tableTop + rowHeight);
     pdf.text(`${content.hoursData.sleeperBerth} hrs`, margin + colWidth, tableTop + rowHeight);
     pdf.text(`${content.hoursData.driving} hrs`, margin + colWidth * 2, tableTop + rowHeight);
