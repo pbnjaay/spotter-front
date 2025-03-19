@@ -27,6 +27,7 @@ export default function DailyLogSheet({ logs, tripId }: DailyLogSheetProps) {
   const [dailyLogs, setDailyLogs] = useState<ELDLog[]>([]);
   const [driverName, setDriverName] = useState<string>("");
   const [driverNotes, setDriverNotes] = useState<string>("");
+  const [driverSignature, setDriverSignature] = useState<string | null>(null);
   const [totalHours, setTotalHours] = useState<Record<string, number>>({
     OFF: 0,
     SB: 0,
