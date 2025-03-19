@@ -45,7 +45,7 @@ export default function Home() {
     dropoff: "",
   });
   const [activeInput, setActiveInput] = useState<"current" | "pickup" | "dropoff" | null>(null);
-  const [driverName, setDriverName] = useState<string>("");
+  const [driverName, _] = useState<string>("");
 
   const debouncedSearch = useCallback((query: string) => {
     const searchFn = async (query: string) => {
