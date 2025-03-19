@@ -17,7 +17,6 @@ interface ELDLog {
 
 interface DailyLogSheetProps {
   logs: ELDLog[];
-  driverName: string;
   tripId: number;
 }
 
@@ -40,7 +39,7 @@ const DUTY_STATUS_COLORS: Record<string, string> = {
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-const DailyLogSheet: React.FC<DailyLogSheetProps> = ({ logs, driverName: initialDriverName, tripId }) => {
+const DailyLogSheet: React.FC<DailyLogSheetProps> = ({ logs, tripId }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [dailyLogs, setDailyLogs] = useState<ELDLog[]>([]);
   const [totalHours, setTotalHours] = useState<Record<string, number>>({
@@ -57,7 +56,7 @@ const DailyLogSheet: React.FC<DailyLogSheetProps> = ({ logs, driverName: initial
   const [fromLocation, setFromLocation] = useState<string>("");
   const [toLocation, setToLocation] = useState<string>("");
   const [totalMiles, setTotalMiles] = useState<string>("");
-  const [driverName, setDriverName] = useState<string>(initialDriverName || "");
+  const [driverName, setDriverName] = useState<string>("");
   
   const logSheetRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<HTMLDivElement>(null);

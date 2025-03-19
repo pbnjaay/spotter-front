@@ -45,7 +45,6 @@ export default function Home() {
     dropoff: "",
   });
   const [activeInput, setActiveInput] = useState<"current" | "pickup" | "dropoff" | null>(null);
-  const [driverName, _] = useState<string>("");
 
   const debouncedSearch = useCallback((query: string) => {
     const searchFn = async (query: string) => {
@@ -331,7 +330,6 @@ export default function Home() {
                   <DailyLogSheet 
                     logs={eldLogs} 
                     tripId={tripId} 
-                    driverName={driverName} 
                   />
                 </div>
               </TabsContent>
